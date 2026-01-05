@@ -1,0 +1,2 @@
+module EarnTransactionsHelper
+end

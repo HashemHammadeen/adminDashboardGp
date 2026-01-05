@@ -1,0 +1,94 @@
+<div class="space-y-6">
+  <div class="md:flex md:items-center md:justify-between">
+    <div class="flex-1 min-w-0">
+      <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">Points Management</h2>
+      <p class="mt-1 text-sm text-gray-500">Configure point value and view usage statistics.</p>
+    </div>
+  </div>
+
+  <!-- Configuration Card -->
+  <div class="bg-white shadow rounded-lg border border-gray-200 p-6">
+    <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Configuration</h3>
+    <%= form_with url: update_rules_points_path, method: :post, class: "grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6" do |f| %>
+      <div class="sm:col-span-3">
+        <%= f.label :point_value, "Value per Point (Currency)", class: "block text-sm font-medium text-gray-700" %>
+        <div class="mt-1 relative rounded-md shadow-sm">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <span class="text-gray-500 sm:text-sm">$</span>
+          </div>
+          <%= f.number_field :point_value, value: @point_value, step: "0.001", class: "focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md" %>
+        </div>
+      </div>
+
+      <div class="sm:col-span-3">
+        <%= f.label :expiration_days, "Points Expiration (Days)", class: "block text-sm font-medium text-gray-700" %>
+        <div class="mt-1">
+          <%= f.number_field :expiration_days, value: @expiration_days, class: "shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
+        </div>
+      </div>
+
+      <div class="sm:col-span-6">
+        <%= f.submit "Update Configuration", class: "w-full sm:w-auto inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 cursor-pointer" %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="px-4 py-5 sm:p-6">
+        <dt class="text-sm font-medium text-gray-500 truncate">Total Points Issued</dt>
+        <dd class="mt-1 text-3xl font-semibold text-gray-900"><%= number_with_delimiter(@total_earned) %></dd>
+      </div>
+    </div>
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="px-4 py-5 sm:p-6">
+        <dt class="text-sm font-medium text-gray-500 truncate">Total Points Redeemed</dt>
+        <dd class="mt-1 text-3xl font-semibold text-gray-900"><%= number_with_delimiter(@total_redeemed) %></dd>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Transactions -->
+  <div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
+    <div class="bg-white shadow rounded-lg border border-gray-200 overflow-hidden">
+      <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Recent Earnings</h3>
+      </div>
+      <ul class="divide-y divide-gray-200">
+        <% @latest_earns.each do |earn| %>
+          <li class="px-4 py-4 flex items-center justify-between text-sm">
+            <div>
+              <p class="font-medium text-gray-900"><%= earn.user.email %></p>
+              <p class="text-gray-500"><%= earn.shop.name %></p>
+            </div>
+            <div class="text-right">
+              <p class="font-medium text-green-600">+<%= earn.points_earned %></p>
+              <p class="text-gray-400 text-xs"><%= time_ago_in_words(earn.created_at) %> ago</p>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+
+    <div class="bg-white shadow rounded-lg border border-gray-200 overflow-hidden">
+      <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Recent Redemptions</h3>
+      </div>
+      <ul class="divide-y divide-gray-200">
+        <% @latest_redeems.each do |redeem| %>
+          <li class="px-4 py-4 flex items-center justify-between text-sm">
+            <div>
+              <p class="font-medium text-gray-900"><%= redeem.user.email %></p>
+              <p class="text-gray-500"><%= redeem.shop.name %></p>
+            </div>
+            <div class="text-right">
+              <p class="font-medium text-red-600">-<%= redeem.points_used %></p>
+              <p class="text-gray-400 text-xs"><%= time_ago_in_words(redeem.created_at) %> ago</p>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>

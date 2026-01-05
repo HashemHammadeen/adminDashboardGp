@@ -1,0 +1,2 @@
+module RedeemTransactionsHelper
+end

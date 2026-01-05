@@ -1,0 +1,47 @@
+<%= form_with(model: shop, class: "space-y-6") do |f| %>
+  <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+    <div class="sm:col-span-4">
+      <%= f.label :name, "Shop Name", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.text_field :name, class: "mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-primary focus:border-primary sm:text-sm" %>
+    </div>
+
+    <div class="sm:col-span-3">
+      <%= f.label :mall_id, "Mall Location", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.collection_select :mall_id, @malls, :id, :mall_name, { prompt: "Select Mall" }, { class: "..." } %>
+    </div>
+
+    <div class="sm:col-span-6">
+      <%= f.label :logo, "Shop Logo", class: "block text-sm font-medium text-gray-700" %>
+      <div class="mt-1 flex items-center">
+        <% if shop.logo.attached? %>
+          <%= image_tag shop.logo, class: "h-12 w-12 rounded-full object-cover mr-4" %>
+        <% end %>
+        <%= f.file_field :logo, class: "block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:border-primary" %>
+      </div>
+    </div>
+
+    <div class="sm:col-span-6">
+      <%= f.label :category_ids, "Categories", class: "block text-sm font-medium text-gray-700" %>
+      <div class="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
+        <%= f.collection_check_boxes :category_ids, @categories, :id, :category_name do |b| %>
+          <div class="flex items-center">
+            <%= b.check_box class: "h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded" %>
+            <%= b.label class: "ml-2 block text-sm text-gray-900" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="sm:col-span-6">
+      <div class="flex items-center">
+        <%= f.check_box :is_active, class: "h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded" %>
+        <%= f.label :is_active, "Shop is active and visible in the app", class: "ml-2 block text-sm text-gray-900" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="pt-5 flex justify-end space-x-3">
+    <%= link_to "Cancel", shops_path, class: "bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50" %>
+    <%= f.submit class: "bg-primary py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-secondary" %>
+  </div>
+<% end %>

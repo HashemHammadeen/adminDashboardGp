@@ -1,0 +1,115 @@
+<div class="space-y-6">
+  <div class="md:flex md:items-center md:justify-between">
+    <div class="flex-1 min-w-0">
+      <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl">
+        <%= @user.firstname %> <%= @user.lastname %>
+      </h2>
+      <div class="mt-1 flex flex-col sm:flex-row sm:space-x-6">
+        <div class="mt-2 flex items-center text-sm text-gray-500">
+          <span class="mr-1.5">📧</span> <%= @user.email %>
+        </div>
+        <div class="mt-2 flex items-center text-sm text-gray-500">
+          <span class="mr-1.5">📱</span> <%= @user.phone %>
+        </div>
+        <div class="mt-2 flex items-center text-sm text-gray-500">
+          <span class="mr-1.5">🏆</span> <%= @user.tier&.tier_name || 'No Tier' %>
+        </div>
+      </div>
+    </div>
+    <div class="mt-5 flex lg:mt-0 lg:ml-4 space-x-3">
+      <%= link_to 'Edit Profile', edit_user_path(@user), class: "inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50" %>
+      <%= link_to 'Back to Users', users_path, class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-secondary" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-5 sm:grid-cols-3">
+    <div class="bg-white overflow-hidden shadow rounded-lg border border-gray-200">
+      <div class="px-4 py-5 sm:p-6">
+        <dt class="text-sm font-medium text-gray-500 truncate">Current Points</dt>
+        <dd class="mt-1 text-3xl font-semibold text-primary"><%= @user.user_points_balance&.total_points || 0 %></dd>
+      </div>
+    </div>
+    <div class="bg-white overflow-hidden shadow rounded-lg border border-gray-200">
+      <div class="px-4 py-5 sm:p-6">
+        <dt class="text-sm font-medium text-gray-500 truncate">Lifetime Points</dt>
+        <dd class="mt-1 text-3xl font-semibold text-gray-900"><%= @user.user_points_balance&.lifetime_points || 0 %></dd>
+      </div>
+    </div>
+    <div class="bg-white overflow-hidden shadow rounded-lg border border-gray-200">
+      <div class="px-4 py-5 sm:p-6">
+        <dt class="text-sm font-medium text-gray-500 truncate">Active Stamp Cards</dt>
+        <dd class="mt-1 text-3xl font-semibold text-gray-900"><%= @stamp_cards.count %></dd>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+    <div class="bg-white shadow rounded-lg border border-gray-200">
+      <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+        <h3 class="text-lg font-medium leading-6 text-gray-900">Recent Earn Transactions</h3>
+      </div>
+      <ul class="divide-y divide-gray-200">
+        <% if @earn_transactions.any? %>
+          <% @earn_transactions.each do |tx| %>
+            <li class="px-4 py-4 sm:px-6">
+              <div class="flex items-center justify-between">
+                <p class="text-sm font-medium text-primary truncate"><%= tx.shop&.name %></p>
+                <div class="ml-2 flex-shrink-0 flex">
+                  <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-success-100 text-success-800">+<%= tx.points_earned %> pts</p>                </div>
+              </div>
+              <div class="mt-2 text-xs text-gray-500"><%= tx.created_at.strftime("%b %d, %Y - %H:%M") %></div>
+            </li>
+          <% end %>
+        <% else %>
+          <li class="px-4 py-4 text-sm text-gray-500 italic">No earnings yet.</li>
+        <% end %>
+      </ul>
+    </div>
+
+    <div class="bg-white shadow rounded-lg border border-gray-200">
+      <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+        <h3 class="text-lg font-medium leading-6 text-gray-900">Stamp Cards</h3>
+      </div>
+      <ul class="divide-y divide-gray-200">
+        <% if @stamp_cards.any? %>
+          <% @stamp_cards.each do |user_card| %>
+            <li class="px-4 py-4 sm:px-6">
+              <div class="flex items-center justify-between">
+                <div class="flex flex-col">
+                  <p class="text-sm font-medium text-gray-900"><%= user_card.stamp.shop.name %></p>
+                  <p class="text-xs text-gray-500"><%= user_card.stamp.name %></p>
+                </div>
+                <%# Updated to use stamps_counter and stamps_required %>
+                <span class="text-sm font-semibold text-primary">
+                  <%= user_card.stamps_counter %> / <%= user_card.stamp.stamps_required %>
+                </span>
+              </div>
+
+              <div class="mt-2 w-full bg-gray-200 rounded-full h-2">
+                <%# Updated calculation %>
+                <% progress = (user_card.stamps_counter.to_f / user_card.stamp.stamps_required * 100).clamp(0, 100) %>
+                <div class="bg-primary h-2 rounded-full transition-all duration-500" style="width: <%= progress %>%"></div>
+              </div>
+
+              <% if user_card.is_completed %>
+                <div class="mt-2 flex items-center text-xs text-success font-medium">
+                  <span>✅ Reward Ready!</span>
+                </div>
+              <% end %>
+            </li>
+          <% end %>
+        <% else %>
+          <li class="px-4 py-4 text-sm text-gray-500 italic">No active stamp cards.</li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+
+  <div class="bg-error-50 shadow rounded-lg border border-error-200 p-6">
+    <h3 class="text-sm font-semibold text-error-800 uppercase tracking-wider">Danger Zone</h3>
+    <p class="mt-1 text-sm text-error">Permanently delete this user and all associated loyalty data.</p>
+    <div class="mt-4">
+      <%= button_to "Delete User Account", user_path(@user), method: :delete, data: { confirm: 'Are you sure?' }, class: "text-error-700 bg-white border border-error-300 hover:bg-error-50 px-4 py-2 rounded-md text-sm font-medium" %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+<div class="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-2xl overflow-hidden p-8">
+  <div class="text-center mb-8">
+    <h2 class="text-3xl font-bold text-white mb-2">Sign Up</h2>
+    <p class="text-gray-300 text-sm">Create your Mall Admin account.</p>
+  </div>
+
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-5" }) do |f| %>
+    <%= render "mall_admins/shared/error_messages", resource: resource %>
+
+    <div class="space-y-4">
+      <div class="relative group">
+        <%= f.text_field :name, autofocus: true, autocomplete: "name", placeholder: " ", class: "peer w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all" %>
+        <%= f.label :name, "Full Name", class: "absolute left-4 -top-2.5 bg-slate-800 px-1 text-xs text-gray-400 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-secondary peer-focus:text-xs rounded" %>
+      </div>
+
+      <div class="relative group">
+        <%= f.text_field :phone, autocomplete: "tel", placeholder: " ", class: "peer w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all" %>
+        <%= f.label :phone, "Phone Number", class: "absolute left-4 -top-2.5 bg-slate-800 px-1 text-xs text-gray-400 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-secondary peer-focus:text-xs rounded" %>
+      </div>
+
+      <div class="relative group">
+        <%= f.collection_select :mall_id, Mall.all, :id, :mall_name, { prompt: "Select your Mall" }, { class: "w-full bg-slate-800 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all" } %>
+      </div>
+
+      <div class="relative group">
+        <%= f.email_field :email, autocomplete: "email", placeholder: " ", class: "peer w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all" %>
+        <%= f.label :email, "Email Address", class: "absolute left-4 -top-2.5 bg-slate-800 px-1 text-xs text-gray-400 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-secondary peer-focus:text-xs rounded" %>
+      </div>
+
+      <div class="relative group">
+        <%= f.password_field :password, autocomplete: "new-password", placeholder: " ", class: "peer w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all" %>
+        <%= f.label :password, "Password", class: "absolute left-4 -top-2.5 bg-slate-800 px-1 text-xs text-gray-400 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-secondary peer-focus:text-xs rounded" %>
+        <% if @minimum_password_length %>
+          <p class="mt-1 text-xs text-gray-500 pl-1"><%= @minimum_password_length %> characters minimum</p>
+        <% end %>
+      </div>
+
+      <div class="relative group">
+        <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: " ", class: "peer w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all" %>
+        <%= f.label :password_confirmation, "Confirm Password", class: "absolute left-4 -top-2.5 bg-slate-800 px-1 text-xs text-gray-400 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-secondary peer-focus:text-xs rounded" %>
+      </div>
+    </div>
+
+    <%= f.submit "Create Account", class: "w-full bg-secondary hover:bg-secondary/90 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5" %>
+  <% end %>
+
+  <div class="mt-6 text-center text-sm text-gray-400">
+    <p>Already have an account? <%= link_to "Log in", new_session_path(resource_name), class: "text-white font-medium hover:underline" %></p>
+  </div>
+</div>

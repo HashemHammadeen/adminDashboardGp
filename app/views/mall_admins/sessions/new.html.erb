@@ -1,0 +1,42 @@
+<div class="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-2xl overflow-hidden p-8">
+  <div class="text-center mb-8">
+    <p class="text-xs font-bold text-quaternary tracking-widest uppercase mb-1">Logging in as</p>
+    <h2 class="text-3xl font-bold text-white mb-2">Mall Admin</h2>
+    <p class="text-gray-300 text-sm">Welcome back! Please login to your account.</p>
+  </div>
+
+  <%= form_for(resource, as: resource_name, url: mall_admin_session_path, html: { class: "space-y-6" }) do |f| %>
+    <div class="space-y-4">
+      <div class="relative group">
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: " ", class: "peer w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-quaternary focus:border-transparent transition-all" %>
+        <%= f.label :email, "Email Address", class: "absolute left-4 -top-2.5 bg-primary px-1 text-xs text-gray-300 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-quaternary peer-focus:text-xs rounded" %>
+      </div>
+
+      <div class="relative group">
+        <%= f.password_field :password, autocomplete: "current-password", placeholder: " ", class: "peer w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-quaternary focus:border-transparent transition-all" %>
+        <%= f.label :password, "Password", class: "absolute left-4 -top-2.5 bg-primary px-1 text-xs text-gray-300 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-quaternary peer-focus:text-xs rounded" %>
+      </div>
+    </div>
+
+    <% if devise_mapping.rememberable? %>
+      <div class="flex items-center justify-between text-sm">
+        <label class="flex items-center space-x-2 cursor-pointer group">
+          <%= f.check_box :remember_me, class: "form-checkbox h-4 w-4 text-quaternary rounded border-gray-600 bg-white/10 focus:ring-offset-primary" %>
+          <span class="text-gray-300 group-hover:text-white transition-colors">Remember me</span>
+        </label>
+        <%= link_to "Forgot password?", new_password_path(resource_name), class: "text-quaternary hover:text-white transition-colors" %>
+      </div>
+    <% end %>
+
+    <%= f.submit "Sign In", class: "w-full bg-quaternary hover:bg-quaternary/90 text-primary font-bold py-3 px-4 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5" %>
+  <% end %>
+
+  <div class="mt-8 text-center text-sm text-gray-300">
+    <p>Don't have an account? <%= link_to "Sign up", new_registration_path(resource_name), class: "text-quaternary font-medium hover:underline" %></p>
+  </div>
+
+  <div class="mt-4 pt-4 border-t border-white/10 text-center">
+    <p class="text-xs text-gray-400 mb-2">Wrong portal?</p>
+    <%= link_to "Switch to Shop Admin Login →", new_shop_admin_session_path, class: "text-quaternary hover:text-white transition-colors text-sm font-medium" %>
+  </div>
+</div>

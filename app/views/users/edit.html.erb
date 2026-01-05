@@ -1,0 +1,25 @@
+<div class="max-w-4xl mx-auto">
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-900">Edit User Profile</h1>
+    <p class="text-sm text-gray-600">Modify loyalty tier and contact information for <%= @user.firstname %>.</p>
+  </div>
+
+  <div class="bg-white shadow sm:rounded-lg border border-gray-200">
+    <div class="px-4 py-5 sm:p-6">
+      <%= render "form", user: @user %>
+    </div>
+  </div>
+
+  <div class="mt-8 bg-info-50 rounded-md p-4">
+    <div class="flex">
+      <div class="flex-shrink-0 text-info-400">
+        ℹ️
+      </div>
+      <div class="ml-3">
+        <p class="text-sm text-info-700">
+          Updating the tier will automatically recalculate point multipliers for future transactions.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

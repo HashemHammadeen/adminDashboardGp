@@ -1,0 +1,217 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="md:flex md:items-center md:justify-between">
+    <div class="flex-1 min-w-0">
+      <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">Dashboard Overview</h2>
+    </div>
+    <div class="mt-4 flex md:mt-0 md:ml-4">
+      <%= link_to "System Configuration", configurations_path, class: "ml-3 inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary" %>
+    </div>
+  </div>
+
+  <!-- Key Metrics (Top Row) -->
+  <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+    <!-- Total Users -->
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">Total Users</dt>
+              <dd>
+                <div class="text-lg font-medium text-gray-900"><%= @total_users %></div>
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-5 py-3">
+        <div class="text-sm">
+          <span class="text-success font-medium"><%= @active_users %> active</span>
+          <span class="text-gray-500"> in last 30 days</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Points Issued -->
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">Points Issued</dt>
+              <dd>
+                <div class="text-lg font-medium text-gray-900"><%= number_with_delimiter(@total_points_issued) %></div>
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-5 py-3">
+        <div class="text-sm">
+          <span class="text-gray-500">Total lifetime issuance</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Redemption Rate -->
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">Redemption Rate</dt>
+              <dd>
+                <div class="text-lg font-medium text-gray-900"><%= @redemption_rate %>%</div>
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-5 py-3">
+        <div class="text-sm">
+          <span class="text-gray-500"><%= number_with_delimiter(@redeemed_points) %> points redeemed</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Liability -->
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">Outstanding Liability</dt>
+              <dd>
+                <div class="text-lg font-medium text-gray-900"><%= number_to_currency(@monetary_liability) %></div>
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-5 py-3">
+        <div class="text-sm">
+          <span class="text-error font-medium"><%= @expiring_soon_count %> users</span>
+          <span class="text-gray-500"> with points expiring soon</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
+    <!-- User Growth Chart -->
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">User Growth (Last 30 Days)</h3>
+        <div class="h-64"
+             data-controller="charts"
+             data-charts-type-value="line"
+             data-charts-data-value="<%= {
+               labels: @user_growth.keys.map { |d| d.strftime('%b %d') },
+               datasets: [{
+                 label: 'New Users',
+                 data: @user_growth.values,
+                 borderColor: 'rgb(79, 70, 229)',
+                 tension: 0.1
+               }]
+             }.to_json %>">
+          <canvas></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Points Earned (Last 30 Days)</h3>
+        <div class="mt-5 h-64 w-full" data-controller="charts"
+             data-charts-type-value="bar"
+             data-charts-data-value="<%= {
+               labels: @points_earned_trend.keys.map { |d| d.strftime('%b %d') },
+               datasets: [{
+                 label: 'Points Earned',
+                 data: @points_earned_trend.values,
+                 backgroundColor: 'rgba(79, 70, 229, 0.5)',
+                 borderColor: 'rgb(79, 70, 229)',
+                 borderWidth: 1
+               }]
+             }.to_json %>">
+          <canvas></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Recent Earnings -->
+    <div class="bg-white shadow rounded-lg p-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Earnings</h3>
+      <div class="overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead>
+          <tr>
+            <th class="text-left text-xs font-medium text-gray-500 uppercase">User</th>
+            <th class="text-left text-xs font-medium text-gray-500 uppercase">Shop</th>
+            <th class="text-right text-xs font-medium text-gray-500 uppercase">Points</th>
+          </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+          <% @recent_earnings.each do |earn| %>
+            <tr>
+              <td class="py-2 text-sm text-gray-900"><%= earn.user.firstname %></td>
+              <td class="py-2 text-sm text-gray-600"><%= earn.shop.name %></td>
+              <td class="py-2 text-sm text-right font-semibold text-success">+<%= earn.points_earned %></td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Recent Redemptions -->
+    <div class="bg-white shadow rounded-lg p-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Redemptions</h3>
+      <div class="overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead>
+          <tr>
+            <th class="text-left text-xs font-medium text-gray-500 uppercase">User</th>
+            <th class="text-left text-xs font-medium text-gray-500 uppercase">Shop</th>
+            <th class="text-right text-xs font-medium text-gray-500 uppercase">Points</th>
+          </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+          <% @recent_redemptions.each do |redeem| %>
+            <tr>
+              <td class="py-2 text-sm text-gray-900"><%= redeem.user.firstname %></td>
+              <td class="py-2 text-sm text-gray-600"><%= redeem.shop.name %></td>
+              <td class="py-2 text-sm text-right font-semibold text-error">-<%= redeem.points_used %></td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

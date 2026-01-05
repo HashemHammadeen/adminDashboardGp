@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  description: MyText
+  start_date: 2025-12-31 00:20:39
+  end_date: 2025-12-31 00:20:39
+  status: 1
+  shop_id: 
+
+two:
+  name: MyString
+  description: MyText
+  start_date: 2025-12-31 00:20:39
+  end_date: 2025-12-31 00:20:39
+  status: 1
+  shop_id: 

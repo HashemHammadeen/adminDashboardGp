@@ -1,0 +1,209 @@
+<div class="space-y-6">
+  <div class="md:flex md:items-center md:justify-between">
+    <div class="flex-1 min-w-0">
+      <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+        Dashboard - <%= @shop.name %>
+      </h2>
+      <p class="mt-1 text-sm text-gray-500">Welcome back, <%= current_shop_admin.name %>!</p>
+    </div>
+    <div class="mt-4 flex md:mt-0 md:ml-4">
+      <%= link_to 'Edit Shop', edit_shop_admins_shop_path, class: "ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700" %>
+    </div>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="px-4 py-5 sm:p-6">
+        <dt class="text-sm font-medium text-gray-500 truncate">Total Sales</dt>
+        <dd class="mt-1 text-3xl font-semibold text-gray-900"><%= number_to_currency(@total_sales) %></dd>
+      </div>
+    </div>
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="px-4 py-5 sm:p-6">
+        <dt class="text-sm font-medium text-gray-500 truncate">Points Earned</dt>
+        <dd class="mt-1 text-3xl font-semibold text-green-600"><%= number_with_delimiter(@total_points_earned) %></dd>
+      </div>
+    </div>
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="px-4 py-5 sm:p-6">
+        <dt class="text-sm font-medium text-gray-500 truncate">Points Redeemed</dt>
+        <dd class="mt-1 text-3xl font-semibold text-red-600"><%= number_with_delimiter(@total_points_redeemed) %></dd>
+      </div>
+    </div>
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="px-4 py-5 sm:p-6">
+        <dt class="text-sm font-medium text-gray-500 truncate">Total Transactions</dt>
+        <dd class="mt-1 text-3xl font-semibold text-gray-900"><%= number_with_delimiter(@total_transactions) %></dd>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
+    <!-- Points Activity Chart -->
+    <div class="bg-white shadow rounded-lg p-6">
+      <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Points Activity (Last 30 Days)</h3>
+      <canvas id="pointsChart"></canvas>
+    </div>
+
+    <!-- Top Offers Chart -->
+    <div class="bg-white shadow rounded-lg p-6">
+      <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Top Performing Offers</h3>
+      <canvas id="offersChart"></canvas>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Points Activity Chart
+      const pointsCtx = document.getElementById('pointsChart').getContext('2d');
+      new Chart(pointsCtx, {
+        type: 'line',
+        data: {
+          labels: <%= raw @points_activity.map { |d| d[:date] }.to_json %>,
+          datasets: [{
+            label: 'Points Earned',
+            data: <%= @points_activity.map { |d| d[:earned] }.to_json %>,
+            borderColor: '#5CB85C',
+            backgroundColor: 'rgba(92, 184, 92, 0.1)',
+            tension: 0.4,
+            fill: true
+          }, {
+            label: 'Points Redeemed',
+            data: <%= @points_activity.map { |d| d[:redeemed] }.to_json %>,
+            borderColor: '#D9534F',
+            backgroundColor: 'rgba(217, 83, 79, 0.1)',
+            tension: 0.4,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          interaction: {
+            mode: 'index',
+            intersect: false,
+          },
+          plugins: {
+            legend: {
+              position: 'top',
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+
+      // Top Offers Chart
+      const offersCtx = document.getElementById('offersChart').getContext('2d');
+      new Chart(offersCtx, {
+        type: 'bar',
+        data: {
+          labels: <%= raw @top_offers.map { |o| o[0] }.to_json %>,
+          datasets: [{
+            label: 'Redemptions',
+            data: <%= @top_offers.map { |o| o[1] }.to_json %>,
+            backgroundColor: [
+              '#213448',
+              '#547792',
+              '#94B4C1',
+              '#ECEFCA',
+              '#F0AD4E'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    });
+  </script>
+
+  <!-- Recent Activity -->
+  <div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
+    <!-- Recent Earnings -->
+    <div class="bg-white shadow rounded-lg">
+      <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Recent Points Earned</h3>
+      </div>
+      <ul class="divide-y divide-gray-200">
+        <% @recent_earns.each do |earn| %>
+          <li class="px-4 py-4 flex items-center justify-between">
+            <div>
+              <p class="text-sm font-medium text-gray-900"><%= earn.user.email %></p>
+              <p class="text-sm text-gray-500"><%= time_ago_in_words(earn.created_at) %> ago</p>
+            </div>
+            <span class="text-green-600 font-semibold">+<%= earn.points_earned %></span>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+
+    <!-- Recent Redemptions -->
+    <div class="bg-white shadow rounded-lg">
+      <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Recent Redemptions</h3>
+      </div>
+      <ul class="divide-y divide-gray-200">
+        <% @recent_redeems.each do |redeem| %>
+          <li class="px-4 py-4 flex items-center justify-between">
+            <div>
+              <p class="text-sm font-medium text-gray-900"><%= redeem.user.email %></p>
+              <p class="text-sm text-gray-500"><%= time_ago_in_words(redeem.created_at) %> ago</p>
+            </div>
+            <span class="text-red-600 font-semibold">-<%= redeem.points_used %></span>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Quick Links -->
+  <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+    <%= link_to shop_admins_offers_path, class: "bg-white shadow rounded-lg p-6 hover:shadow-md transition-shadow" do %>
+      <div class="text-center">
+        <div class="text-4xl mb-2">🎁</div>
+        <h3 class="font-medium text-gray-900">Manage Offers</h3>
+        <p class="text-sm text-gray-500"><%= @active_offers.count %> active</p>
+      </div>
+    <% end %>
+    
+    <%= link_to shop_admins_stamps_path, class: "bg-white shadow rounded-lg p-6 hover:shadow-md transition-shadow" do %>
+      <div class="text-center">
+        <div class="text-4xl mb-2">🎫</div>
+        <h3 class="font-medium text-gray-900">Stamp Programs</h3>
+        <p class="text-sm text-gray-500"><%= @active_stamps.count %> active</p>
+      </div>
+    <% end %>
+    
+    <%= link_to new_shop_admins_redemption_path, class: "bg-white shadow rounded-lg p-6 hover:shadow-md transition-shadow" do %>
+      <div class="text-center">
+        <div class="text-4xl mb-2">📱</div>
+        <h3 class="font-medium text-gray-900">Scan QR Code</h3>
+        <p class="text-sm text-gray-500">Redeem points</p>
+      </div>
+    <% end %>
+    
+    <%= link_to shop_admins_shop_path, class: "bg-white shadow rounded-lg p-6 hover:shadow-md transition-shadow" do %>
+      <div class="text-center">
+        <div class="text-4xl mb-2">🏪</div>
+        <h3 class="font-medium text-gray-900">Shop Settings</h3>
+        <p class="text-sm text-gray-500">View & Edit</p>
+      </div>
+    <% end %>
+  </div>
+</div>

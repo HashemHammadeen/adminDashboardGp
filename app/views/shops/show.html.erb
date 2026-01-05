@@ -1,0 +1,145 @@
+<div class="space-y-6">
+  <div class="md:flex md:items-center md:justify-between">
+    <div class="flex-1 min-w-0">
+      <div class="flex items-center">
+        <% if @shop.logo.attached? %>
+          <%= image_tag @shop.logo, class: "h-16 w-16 rounded-full object-cover mr-4" %>
+        <% end %>
+        <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl"><%= @shop.name %></h2>
+        <span class="ml-4 px-2.5 py-0.5 rounded-full text-xs font-medium <%= @shop.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
+<%= @shop.status&.titleize %>
+        </span>
+      </div>
+      <div class="mt-1 flex flex-col sm:flex-row sm:space-x-6 text-sm text-gray-500">
+        <div class="mt-2 flex items-center">🏢 <%= @shop.mall&.mall_name %></div>
+        <div class="mt-2 flex items-center">
+          🏷️ 
+          <% @shop.categories.each do |category| %>
+            <span class="ml-1 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+              <%= category.category_name %>
+            </span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="mt-5 flex lg:mt-0 lg:ml-4 space-x-3">
+      <%= link_to 'Analytics', analytics_shop_path(@shop), class: "inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50" %>
+      <%= link_to 'Edit Shop', edit_shop_path(@shop), class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-secondary" %>
+      
+      <% if @shop.pending? %>
+        <%= button_to 'Approve', approve_shop_path(@shop), method: :patch, class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 cursor-pointer" %>
+      <% end %>
+      
+      <% if @shop.is_active? %>
+        <%= button_to 'Deactivate', deactivate_shop_path(@shop), method: :patch, class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 cursor-pointer" %>
+      <% else %>
+         <%= button_to 'Activate', activate_shop_path(@shop), method: :patch, class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 cursor-pointer" %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+    <div class="lg:col-span-2 space-y-6">
+      <!-- Transactions Table -->
+      <div class="bg-white shadow rounded-lg border border-gray-200 overflow-hidden">
+        <div class="px-4 py-5 border-b border-gray-200 sm:px-6 flex justify-between items-center">
+          <h3 class="text-lg font-medium text-gray-900">Recent Earn Transactions</h3>
+        </div>
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">User ID</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Points</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+          </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200 text-sm">
+          <% @recent_transactions.each do |tx| %>
+            <tr>
+              <td class="px-6 py-4 truncate font-mono text-gray-600"><%= tx.user_id %></td>
+              <td class="px-6 py-4 text-green-600 font-semibold">+<%= tx.points_earned %></td>
+              <td class="px-6 py-4 text-gray-500"><%= tx.created_at.strftime("%b %d, %Y") %></td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+
+       <!-- Shop Admins Section -->
+      <div class="bg-white shadow rounded-lg border border-gray-200 overflow-hidden">
+        <div class="px-4 py-5 border-b border-gray-200 sm:px-6 flex justify-between items-center">
+          <div>
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Shop Admins</h3>
+            <p class="mt-1 max-w-2xl text-sm text-gray-500">Manage administrators for this shop.</p>
+          </div>
+        </div>
+        <div class="border-t border-gray-200">
+          <ul class="divide-y divide-gray-200">
+            <% @shop.shop_admins.each do |admin| %>
+              <li class="px-4 py-4 flex items-center justify-between">
+                <div>
+                  <p class="text-sm font-medium text-gray-900"><%= admin.name %></p>
+                  <p class="text-sm text-gray-500"><%= admin.email %></p>
+                </div>
+                <%= button_to "Remove", shop_shop_admin_path(@shop, admin), method: :delete, data: { confirm: "Are you sure?" }, class: "text-red-600 hover:text-red-900 text-sm font-medium bg-transparent border-0 cursor-pointer" %>
+              </li>
+            <% end %>
+            <li class="px-4 py-4 bg-gray-50">
+              <h4 class="text-sm font-medium text-gray-900 mb-2">Add New Admin</h4>
+              <%= form_with model: [@shop, ShopAdmin.new], class: "flex flex-col sm:flex-row gap-4 items-end" do |f| %>
+                <div class="flex-1 w-full">
+                  <%= f.label :name, class: "sr-only" %>
+                  <%= f.text_field :name, placeholder: "Name", class: "block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" %>
+                </div>
+                <div class="flex-1 w-full">
+                  <%= f.label :email, class: "sr-only" %>
+                  <%= f.email_field :email, placeholder: "Email", class: "block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" %>
+                </div>
+                <div class="flex-1 w-full">
+                  <%= f.label :phone, class: "sr-only" %>
+                  <%= f.text_field :phone, placeholder: "Phone", class: "block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" %>
+                </div>
+                <div class="flex-1 w-full">
+                  <%= f.label :password, class: "sr-only" %>
+                  <%= f.password_field :password, placeholder: "Password", class: "block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" %>
+                </div>
+                <div class="flex-none">
+                  <%= f.submit "Add", class: "w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none cursor-pointer" %>
+                </div>
+              <% end %>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-6">
+      <div class="bg-white shadow rounded-lg border border-gray-200 p-5">
+        <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">Active Offers</h3>
+        <ul class="space-y-3">
+          <% @offers.each do |offer| %>
+            <li class="flex items-center justify-between text-sm">
+              <span class="text-gray-700"><%= offer.name %></span>
+              <span class="text-primary font-medium">
+                  <!-- Assuming display_value exists in model or handle manually -->
+                  <%= offer.reward_type.titleize %>
+              </span>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+
+      <div class="bg-white shadow rounded-lg border border-gray-200 p-5">
+        <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">Active Stamps</h3>
+        <ul class="space-y-3">
+          <% @stamps.each do |stamp| %>
+            <li class="text-sm">
+              <p class="font-medium text-gray-800"><%= stamp.name %></p>
+              <p class="text-xs text-gray-500 text-truncate"><%= stamp.stamps_required %> stamps for reward</p>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

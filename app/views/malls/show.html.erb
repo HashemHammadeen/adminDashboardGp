@@ -1,0 +1,63 @@
+<div class="mx-auto md:w-2/3 w-full flex">
+  <div class="mx-auto">
+    <% if notice.present? %>
+      <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
+    <% end %>
+
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
+      <div class="px-4 py-5 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Mall Details</h3>
+        <p class="mt-1 max-w-2xl text-sm text-gray-500">Information about the mall.</p>
+      </div>
+      <div class="border-t border-primary">
+        <dl>
+          <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">Name</dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"><%= @mall.mall_name %></dd>
+          </div>
+          <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">Location</dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"><%= @mall.location %></dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
+      <div class="px-4 py-5 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Statistics</h3>
+        <p class="mt-1 max-w-2xl text-sm text-gray-500">Performance metrics</p>
+      </div>
+      <div class="border-t border-gray-200">
+        <dl class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+          <div class="common-stat-card bg-blue-50 p-4 rounded-lg">
+             <dt class="text-sm font-medium text-blue-500">Total Shops</dt>
+             <dd class="mt-1 text-2xl font-semibold text-blue-900"><%= @stats[:shops_count] %></dd>
+          </div>
+          <div class="common-stat-card bg-green-50 p-4 rounded-lg">
+             <dt class="text-sm font-medium text-green-500">Active Shops</dt>
+             <dd class="mt-1 text-2xl font-semibold text-green-900"><%= @stats[:active_shops_count] %></dd>
+          </div>
+          <div class="common-stat-card bg-purple-50 p-4 rounded-lg">
+             <dt class="text-sm font-medium text-purple-500">Total Sales</dt>
+             <dd class="mt-1 text-2xl font-semibold text-purple-900"><%= number_to_currency @stats[:total_sales] %></dd>
+          </div>
+           <div class="common-stat-card bg-yellow-50 p-4 rounded-lg">
+             <dt class="text-sm font-medium text-yellow-500">Points Issued</dt>
+             <dd class="mt-1 text-2xl font-semibold text-yellow-900"><%= number_with_delimiter @stats[:total_points_issued] %></dd>
+          </div>
+          <div class="common-stat-card bg-red-50 p-4 rounded-lg">
+             <dt class="text-sm font-medium text-red-500">Points Redeemed</dt>
+             <dd class="mt-1 text-2xl font-semibold text-red-900"><%= number_with_delimiter @stats[:total_redeemed] %></dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="flex space-x-4">
+      <%= link_to "Edit", edit_mall_path(@mall), class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium hover:bg-gray-200" %>
+      <%= link_to "Back to Malls", malls_path, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium hover:bg-gray-200" %>
+      <%= link_to "Destroy", @mall, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "rounded-lg py-3 px-5 bg-error-100 text-error-600 inline-block font-medium hover:bg-error-200" %>
+    </div>
+  </div>
+</div>
