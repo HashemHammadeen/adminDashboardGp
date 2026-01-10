@@ -30,6 +30,7 @@ COPY . .
 
 # Precompile assets with all required dummy env vars
 RUN SECRET_KEY_BASE_DUMMY=1 \
+    DB_HOST=localhost \
     DB_NAME=dummy_db \
     DB_USERNAME=dummy_user \
     DB_PASSWORD=dummy_pass \
