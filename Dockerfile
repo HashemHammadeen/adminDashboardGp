@@ -28,9 +28,13 @@ RUN bundle install
 # Copy application code
 COPY . .
 
-# Precompile assets with dummy values
+# Precompile assets with all required dummy env vars
 RUN SECRET_KEY_BASE_DUMMY=1 \
-    DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy \
+    DB_NAME=dummy_db \
+    DB_USERNAME=dummy_user \
+    DB_PASSWORD=dummy_pass \
+    DATABASE_URL=postgresql://dummy_user:dummy_pass@localhost:5432/dummy_db \
+    RAILS_MAX_THREADS=5 \
     ./bin/rails assets:precompile
 
 FROM base
