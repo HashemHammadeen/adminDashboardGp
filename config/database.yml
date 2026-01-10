@@ -87,6 +87,7 @@ test:
 production:
   primary: &primary_production
     <<: *default
+    host: <%= ENV.fetch("DB_HOST") %>  # ← ADD THIS LINE
     database: <%= ENV.fetch("DB_NAME") %>
     username: <%= ENV.fetch("DB_USERNAME") %>
     password: <%= ENV["DB_PASSWORD"] %>
