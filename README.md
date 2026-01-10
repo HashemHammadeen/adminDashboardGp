@@ -1,3 +1,3 @@
 # README
 
-TESTING
+Editing for video recording
